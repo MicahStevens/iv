@@ -1,4 +1,29 @@
+# Compiled JavaScript (RapydScript output)
 *.js
+
+# RapydScript cache
 *.pyj-cached
+
+# Build cache
 .build-cache
+
+# Editor tags
 tags
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.venv
+env/
+venv/

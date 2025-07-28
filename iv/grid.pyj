@@ -245,6 +245,15 @@ def onkeydown(ev):
     if key is '0':
         change_thumbnail_size(128)
         return True
+    if key is 'w':
+        # Find the currently hovered image
+        hovered = document.querySelector('#grid img:hover')
+        if hovered:
+            window.send_message_to_python('set_wallpaper', url=hovered.dataset.key)
+            return True
+    if key is 'x' or key is 'escape':
+        window.send_message_to_python('exit_application')
+        return True
 
 def reload_thumbnail(key):
     for img in document.querySelectorAll('#grid img'):

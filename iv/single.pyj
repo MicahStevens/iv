@@ -23,6 +23,7 @@ def on_img_load(ev):
     single = document.getElementById('single').firstChild
     single.innerHTML = ''
     set_caption(tooltip(this.dataset.key, this.naturalWidth, this.naturalHeight))
+    this.oncontextmenu = show_context_menu
     single.appendChild(this)
 
 
@@ -32,6 +33,28 @@ def caption_elem():
 def set_caption(txt):
     c = caption_elem()
     c.innerHTML = txt
+
+def show_context_menu(ev):
+    ev.preventDefault()
+    menu = document.getElementById('context-menu')
+    if not menu:
+        return
+    menu.style.display = 'block'
+    menu.style.left = f'{ev.pageX}px'
+    menu.style.top = f'{ev.pageY}px'
+    menu.dataset.image_url = current_url
+
+def hide_context_menu(ev):
+    menu = document.getElementById('context-menu')
+    if menu:
+        menu.style.display = 'none'
+
+def on_menu_item_click(ev):
+    action = ev.target.dataset.action
+    menu = document.getElementById('context-menu')
+    if action is 'set_wallpaper' and menu:
+        window.send_message_to_python('set_wallpaper', url=menu.dataset.image_url)
+    hide_context_menu(ev)
 
 def create_single():
     ans = E.div(id='single')
@@ -64,10 +87,40 @@ def create_single():
         color: white;
         pointer-events: none;
     }
+    
+    #context-menu {
+        display: none;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        z-index: 1000;
+        min-width: 150px;
+    }
+    
+    #context-menu .menu-item {
+        padding: 8px 16px;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    #context-menu .menu-item:hover {
+        background-color: #f0f0f0;
+    }
     ''', type='text/css'))
     ans.appendChild(E.span())
     if not window.config.show_single_caption:
         ans.lastChild.style.display = 'none'
+
+    # Add context menu
+    menu = E.div(id='context-menu')
+    menu.appendChild(E.div(_('Set as Wallpaper'), class_='menu-item', data_action='set_wallpaper'))
+    menu.addEventListener('click', on_menu_item_click)
+    ans.appendChild(menu)
+    
+    # Hide context menu when clicking elsewhere
+    document.addEventListener('click', hide_context_menu)
 
     return ans
 
@@ -128,6 +181,12 @@ def onkeydown(ev):
         return True
     if key is 'backspace' or key is 'up' or key is 'left' or key is 'pageup' or key in 'hk':
         window.show_next_image(current_url, -1)
+        return True
+    if key is 'w':
+        window.send_message_to_python('set_wallpaper', url=current_url)
+        return True
+    if key is 'x':
+        window.send_message_to_python('exit_application')
         return True
 
 def reload_image(key):

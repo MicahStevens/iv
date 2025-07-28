@@ -10,6 +10,13 @@ Supports all image formats used on the web including animated GIFs and SVG.
 Uses a browser engine (chromium) to do the rendering, so its format support
 will always be current.
 
+**Enhanced Features:**
+- Wallpaper setting integration with `swww` for Hyprland desktop
+- Quick exit shortcuts for improved workflow
+
+Original author: [Kovid Goyal](https://github.com/kovidgoyal/iv)  
+Enhanced by: [Micah Stevens](https://github.com/MicahStevens)
+
 Dependencies
 ==============
 
@@ -41,6 +48,9 @@ Grid View
 * `r`, `F5` - Reload all thumbnails
 * `j` - Scroll down
 * `k` - Scroll up
+* `w` - Set hovered image as wallpaper (requires `swww`)
+* `x` - Exit application
+* `Esc` - Exit application
 
 Single Image View
 -------------------
@@ -53,3 +63,6 @@ Single Image View
 * `Esc` - Go back to the grid view
 * `Space`, `Right`, `Down`, `Pagedown`, `j` - Show next image
 * `Backspace`, `Left`, `Up`, `Pageup`, `k` - Show previous image
+* `w` - Set current image as wallpaper (requires `swww`)
+* `x` - Exit application
+* Right-click - Show context menu with wallpaper option

@@ -14,7 +14,7 @@ from PyQt6.QtCore import Qt, QUrl, pyqtSignal
 from PyQt6.QtWebEngineCore import (QWebEnginePage, QWebEngineProfile,
                                    QWebEngineScript, QWebEngineSettings)
 from PyQt6.QtWebEngineWidgets import QWebEngineView
-from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtWidgets import QApplication, QMessageBox
 
 from .constants import appname, cache_dir, config_dir
 
@@ -180,6 +180,20 @@ class Page(QWebEnginePage):
 
     def refresh_grid(self, data):
         self.refresh_all.emit()
+
+    def set_wallpaper(self, data):
+        image_path = QUrl(data['url']).toLocalFile()
+        try:
+            subprocess.run(['swww', 'img', image_path], check=True)
+        except subprocess.CalledProcessError as e:
+            QMessageBox.critical(self.parent(), _('Wallpaper Error'), 
+                               _('Failed to set wallpaper: {}').format(str(e)))
+        except FileNotFoundError:
+            QMessageBox.critical(self.parent(), _('Wallpaper Error'), 
+                               _('swww command not found. Please install swww.'))
+
+    def exit_application(self, data):
+        QApplication.instance().quit()
 
 
 class View(QWebEngineView):
